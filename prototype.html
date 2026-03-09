@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A4A // ARKREEN FOR AGENTS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+  :root {
+    --bg:    #060608;
+    --bg2:   #0c0c12;
+    --bg3:   #111118;
+    --cyan:  #00f5ff;
+    --pink:  #ff2d78;
+    --yellow:#ffe600;
+    --purple:#b44fff;
+    --green: #39ff14;
+    --red:   #ff3131;
+    --dim:   #1a1a2e;
+    --border:#1e1e30;
+    --text:  #e0e0ff;
+    --text2: #7070a0;
+    --text3: #3a3a5c;
+    --glow-c: 0 0 8px #00f5ff88, 0 0 20px #00f5ff33;
+    --glow-p: 0 0 8px #ff2d7888, 0 0 20px #ff2d7833;
+    --glow-y: 0 0 8px #ffe60088, 0 0 20px #ffe60033;
+    --glow-g: 0 0 8px #39ff1488, 0 0 20px #39ff1433;
+    --mono: 'Share Tech Mono', monospace;
+    --orb:  'Orbitron', monospace;
+    --sw: 200px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,245,255,0.015) 2px, rgba(0,245,255,0.015) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: var(--sw);
+    background: var(--bg2);
+    border-right: 1px solid var(--cyan);
+    box-shadow: 2px 0 20px #00f5ff15;
+    display: flex; flex-direction: column; flex-shrink: 0;
+    position: relative;
+  }
+  .logo {
+    padding: 18px 14px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    font-family: var(--orb);
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--cyan);
+    text-shadow: var(--glow-c);
+    letter-spacing: 2px;
+  }
+  .logo-sub {
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 3px;
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+  .nav { padding: 6px 0; flex: 1; overflow-y: auto; }
+  .nav-sect {
+    padding: 12px 14px 4px;
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    color: var(--text2);
+    font-size: 11px;
+    letter-spacing: 1px;
+    border-left: 2px solid transparent;
+    transition: all 0.1s;
+  }
+  .nav-item:hover { color: var(--cyan); background: rgba(0,245,255,0.04); }
+  .nav-item.active {
+    color: var(--cyan);
+    border-left-color: var(--cyan);
+    background: rgba(0,245,255,0.06);
+    text-shadow: var(--glow-c);
+  }
+  .nav-ic { width: 14px; text-align: center; font-size: 12px; }
+
+  .sidebar-foot {
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .agent-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .agent-pill:hover { border-color: var(--cyan); }
+  .av {
+    width: 20px; height: 20px;
+    background: linear-gradient(135deg, var(--cyan), #0066ff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: #000;
+    flex-shrink: 0;
+  }
+  .av-name { font-size: 10px; color: var(--text2); flex: 1; }
+  .online-dot {
+    width: 5px; height: 5px;
+    background: var(--green);
+    box-shadow: var(--glow-g);
+    animation: blink 1.5s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  /* ─── MAIN ─── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar {
+    height: 48px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--cyan);
+    box-shadow: 0 2px 20px #00f5ff10;
+    display: flex; align-items: center;
+    padding: 0 20px; gap: 12px; flex-shrink: 0;
+  }
+  .tb-title {
+    font-family: var(--orb);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cyan);
+    text-shadow: var(--glow-c);
+    letter-spacing: 2px;
+  }
+  .tb-slash { color: var(--text3); }
+  .tb-sub { font-size: 10px; color: var(--text3); letter-spacing: 1px; }
+  .tb-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+  .btn {
+    padding: 5px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    transition: all 0.1s;
+  }
+  .btn-cyan {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+  }
+  .btn-cyan:hover { background: rgba(0,245,255,0.1); box-shadow: var(--glow-c); }
+  .btn-pink {
+    background: var(--pink);
+    color: #000;
+    font-weight: 700;
+  }
+  .btn-pink:hover { box-shadow: var(--glow-p); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--text2); color: var(--text); }
+
+  .content { flex: 1; overflow-y: auto; padding: 20px; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--cyan); }
+
+  /* ─── PAGE ─── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ─── GRID ─── */
+  .g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+  .g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .g21{ display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .mb12{ margin-bottom: 12px; }
+  .mb20{ margin-bottom: 20px; }
+  .mt12{ margin-top: 12px; }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px;
+    position: relative;
+  }
+  .card::before {
+    content:'';
+    position:absolute; top:0; left:0;
+    width:3px; height:100%;
+    background: var(--cyan);
+  }
+  .card.pink::before { background: var(--pink); }
+  .card.yellow::before { background: var(--yellow); }
+  .card.purple::before { background: var(--purple); }
+  .card.green::before { background: var(--green); }
+
+  .c-label { font-size: 9px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .c-val { font-family: var(--orb); font-size: 22px; font-weight: 700; color: var(--text); }
+  .c-val.cyan { color: var(--cyan); text-shadow: var(--glow-c); }
+  .c-val.pink { color: var(--pink); }
+  .c-val.yellow { color: var(--yellow); }
+  .c-val.green { color: var(--green); text-shadow: var(--glow-g); }
+  .c-delta { font-size: 10px; color: var(--text2); margin-top: 4px; }
+  .c-delta.up { color: var(--green); }
+  .c-delta.warn { color: var(--yellow); }
+  .c-delta.err { color: var(--red); }
+
+  /* ─── SECTION TITLE ─── */
+  .sec {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec::after { content:''; flex:1; height:1px; background: var(--border); }
+  .sec.cyan { color: var(--cyan); text-shadow: var(--glow-c); }
+  .sec.pink { color: var(--pink); }
+  .sec.yellow { color: var(--yellow); }
+
+  /* ─── TABLE ─── */
+  .tbl-wrap { background: var(--bg2); border: 1px solid var(--border); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    padding: 8px 14px;
+    text-align: left;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text3);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text2); font-size: 12px; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,245,255,0.03); cursor: pointer; }
+  .td-m { color: var(--text); }
+  .td-code { font-size: 11px; color: var(--cyan); }
+
+  /* ─── BADGE ─── */
+  .tag {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .tag-cyan { color: var(--cyan); border-color: var(--cyan); background: rgba(0,245,255,0.07); }
+  .tag-pink { color: var(--pink); border-color: var(--pink); background: rgba(255,45,120,0.07); }
+  .tag-yellow { color: var(--yellow); border-color: var(--yellow); background: rgba(255,230,0,0.07); }
+  .tag-purple { color: var(--purple); border-color: var(--purple); background: rgba(180,79,255,0.07); }
+  .tag-green { color: var(--green); border-color: var(--green); background: rgba(57,255,20,0.07); }
+  .tag-red { color: var(--red); border-color: var(--red); background: rgba(255,49,49,0.07); }
+
+  /* ─── PIPELINE ─── */
+  .pipeline {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  .pipe-nodes { display: flex; align-items: center; }
+  .pipe-node { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; cursor: pointer; }
+  .pipe-circle {
+    width: 38px; height: 38px;
+    border: 1px solid var(--text3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--text3);
+    transition: all 0.2s;
+    position: relative;
+  }
+  .pipe-circle.done {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    box-shadow: var(--glow-c);
+    background: rgba(0,245,255,0.05);
+  }
+  .pipe-circle.wait {
+    border-color: var(--yellow);
+    color: var(--yellow);
+    box-shadow: var(--glow-y);
+    background: rgba(255,230,0,0.05);
+    animation: pulse-y 1.5s infinite;
+  }
+  @keyframes pulse-y { 0%,100%{box-shadow:var(--glow-y)} 50%{box-shadow:0 0 2px #ffe60044} }
+  .pipe-label { font-size: 10px; color: var(--text3); text-align: center; letter-spacing: 0.5px; }
+  .pipe-label.done { color: var(--cyan); }
+  .pipe-label.wait { color: var(--yellow); }
+  .pipe-arr { color: var(--text3); font-size: 18px; padding-bottom: 20px; flex-shrink: 0; margin: 0 -4px; }
+
+  /* ─── ALERT ─── */
+  .alert {
+    padding: 9px 12px;
+    font-size: 11px;
+    border-left: 2px solid;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .alert-y { border-color: var(--yellow); background: rgba(255,230,0,0.05); color: var(--yellow); }
+  .alert-r { border-color: var(--red); background: rgba(255,49,49,0.05); color: var(--red); }
+  .alert-c { border-color: var(--cyan); background: rgba(0,245,255,0.05); color: var(--cyan); }
+
+  /* ─── STAT ROW ─── */
+  .sr { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+  .sr:last-child { border-bottom: none; }
+  .sr-label { color: var(--text2); }
+  .sr-val { color: var(--text); }
+
+  /* ─── TABS ─── */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .tab {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: var(--text3);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.1s;
+  }
+  .tab:hover { color: var(--text2); }
+  .tab.active { color: var(--cyan); border-bottom-color: var(--cyan); text-shadow: var(--glow-c); }
+  .tc { display: none; }
+  .tc.active { display: block; }
+
+  /* ─── STATE MACHINE ─── */
+  .sm-step {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg2);
+    border-left: 2px solid var(--border);
+    margin-bottom: 2px;
+  }
+  .sm-step.done { border-left-color: var(--cyan); background: rgba(0,245,255,0.03); }
+  .sm-step.active { border-left-color: var(--yellow); background: rgba(255,230,0,0.03); }
+  .sm-step.fail { border-left-color: var(--red); background: rgba(255,49,49,0.03); }
+  .sm-step.pend { opacity: 0.35; }
+  .sm-ic { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+  .sm-body { flex: 1; }
+  .sm-name { font-size: 11px; color: var(--text); letter-spacing: 1px; }
+  .sm-detail { font-size: 10px; color: var(--text3); margin-top: 3px; }
+  .sm-time { font-size: 10px; color: var(--text3); flex-shrink: 0; }
+
+  /* ─── PROGRESS ─── */
+  .pbar-wrap { background: var(--bg3); border: 1px solid var(--border); height: 4px; overflow: hidden; margin-top: 4px; }
+  .pbar { height: 100%; background: var(--cyan); box-shadow: var(--glow-c); transition: width 0.3s; }
+  .pbar.pink { background: var(--pink); box-shadow: var(--glow-p); }
+  .pbar.yellow { background: var(--yellow); box-shadow: var(--glow-y); }
+  .pbar.green { background: var(--green); box-shadow: var(--glow-g); }
+
+  /* ─── SPARKLINE ─── */
+  .spark { display: flex; align-items: flex-end; gap: 2px; height: 28px; }
+  .sb { flex: 1; background: var(--cyan); opacity: 0.4; }
+  .sb:hover { opacity: 1; }
+
+  /* ─── LEADERBOARD ─── */
+  .lb-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-rank { width: 22px; text-align: center; font-family: var(--orb); font-size: 12px; color: var(--text3); }
+  .lb-rank.g1 { color: #ffd700; text-shadow: 0 0 8px #ffd70088; }
+  .lb-rank.g2 { color: #c0c0c0; }
+  .lb-rank.g3 { color: #cd7f32; }
+  .lb-av { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #000; flex-shrink: 0; }
+  .lb-info { flex: 1; }
+  .lb-name { font-size: 11px; color: var(--text); }
+  .lb-meta { font-size: 9px; color: var(--text3); margin-top: 2px; letter-spacing: 1px; }
+  .lb-score { text-align: right; flex-shrink: 0; }
+  .lb-val { font-family: var(--orb); font-size: 14px; color: var(--text); }
+  .lb-unit { font-size: 9px; color: var(--text3); }
+  .lb-bar { width: 60px; }
+  .me .lb-name { color: var(--cyan); }
+  .me .lb-val { color: var(--cyan); text-shadow: var(--glow-c); }
+
+  /* ─── QUEST ─── */
+  .quest {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px;
+    position: relative; overflow: hidden;
+  }
+  .quest::after {
+    content:'';
+    position:absolute; top:0; right:0;
+    width: 40px; height: 40px;
+    border-bottom: 40px solid transparent;
+    border-right: 40px solid var(--bg3);
+  }
+  .q-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .q-icon { font-size: 20px; }
+  .q-title { font-size: 12px; color: var(--text); letter-spacing: 1px; }
+  .q-desc { font-size: 10px; color: var(--text3); margin-top: 2px; }
+  .q-prog-row { display: flex; justify-content: space-between; font-size: 9px; color: var(--text3); margin-bottom: 4px; letter-spacing: 1px; }
+  .q-reward { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text3); }
+  .q-reward strong { color: var(--yellow); text-shadow: var(--glow-y); }
+
+  /* ─── BADGE WALL ─── */
+  .bwall { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
+  .badge-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .badge-item:hover { border-color: var(--cyan); background: rgba(0,245,255,0.04); }
+  .badge-item.locked { opacity: 0.25; filter: grayscale(1); }
+  .b-emoji { font-size: 24px; margin-bottom: 6px; }
+  .b-name { font-size: 10px; color: var(--text); letter-spacing: 0.5px; }
+  .b-cat { font-size: 9px; color: var(--text3); margin-top: 2px; letter-spacing: 1px; }
+
+  /* ─── STRATEGY CARD ─── */
+  .strat {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.1s;
+    position: relative;
+  }
+  .strat:hover { border-color: var(--text2); }
+  .strat.sel { border-color: var(--cyan); box-shadow: var(--glow-c); background: rgba(0,245,255,0.04); }
+  .strat-name { font-family: var(--orb); font-size: 12px; color: var(--text); margin-bottom: 4px; letter-spacing: 1px; }
+  .strat.sel .strat-name { color: var(--cyan); text-shadow: var(--glow-c); }
+  .strat-desc { font-size: 10px; color: var(--text3); margin-bottom: 8px; line-height: 1.5; }
+  .strat-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+  /* ─── CODE ─── */
+  .code-block {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--cyan);
+    padding: 14px;
+    font-size: 11px;
+    line-height: 1.8;
+    overflow-x: auto;
+    color: var(--text2);
+  }
+  .ck { color: var(--purple); }
+  .cs { color: var(--green); }
+  .cc { color: var(--text3); }
+  .cf { color: var(--cyan); }
+
+  /* ─── SEASON BANNER ─── */
+  .season-banner {
+    background: linear-gradient(135deg, rgba(0,245,255,0.06), rgba(255,45,120,0.04));
+    border: 1px solid var(--cyan);
+    box-shadow: var(--glow-c);
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 16px;
+  }
+  .sb-icon { font-size: 32px; }
+  .sb-info { flex: 1; }
+  .sb-title { font-family: var(--orb); font-size: 14px; color: var(--cyan); text-shadow: var(--glow-c); letter-spacing: 2px; }
+  .sb-meta { font-size: 10px; color: var(--text3); margin-top: 4px; letter-spacing: 1px; }
+  .sb-score { text-align: right; }
+  .sb-pts { font-family: var(--orb); font-size: 28px; color: var(--cyan); text-shadow: var(--glow-c); }
+  .sb-rank { font-size: 10px; color: var(--text3); letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">A4A</div>
+    <div class="logo-sub">Arkreen for Agents</div>
+  </div>
+  <div class="nav">
+    <div class="nav-sect">// core</div>
+    <div class="nav-item active" onclick="goto('dashboard',this)"><span class="nav-ic">◈</span> Dashboard</div>
+    <div class="nav-item" onclick="goto('agents',this)"><span class="nav-ic">◉</span> My Agents</div>
+    <div class="nav-item" onclick="goto('miners',this)"><span class="nav-ic">◎</span> Miners</div>
+    <div class="nav-item" onclick="goto('runner',this)"><span class="nav-ic">▷</span> Runner</div>
+    <div class="nav-item" onclick="goto('assets',this)"><span class="nav-ic">◆</span> Assets</div>
+    <div class="nav-sect">// alliance</div>
+    <div class="nav-item" onclick="goto('alliance',this)"><span class="nav-ic">⬡</span> Campaign</div>
+    <div class="nav-sect">// dev</div>
+    <div class="nav-item" onclick="goto('dev',this)"><span class="nav-ic">⌥</span> Developer</div>
+  </div>
+  <div class="sidebar-foot">
+    <div class="agent-pill">
+      <div class="av">A1</div>
+      <span class="av-name">GREENAGENT-01</span>
+      <div class="online-dot"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <span class="tb-title" id="tb-title">DASHBOARD</span>
+    <span class="tb-slash">//</span>
+    <span class="tb-sub" id="tb-sub">SEASON 1 · 23D LEFT</span>
+    <div class="tb-right">
+      <button class="btn btn-cyan" onclick="alert('Settings')">CONFIG</button>
+      <button class="btn btn-pink" id="tb-btn" onclick="alert('Run triggered!')">EXECUTE</button>
+    </div>
+  </div>
+  <div class="content">
+
+  <!-- ════════════════════════════════ DASHBOARD ════════════════════════════════ -->
+  <div class="page active" id="page-dashboard">
+    <div class="g4 mb20">
+      <div class="card">
+        <div class="c-label">Generated / Week</div>
+        <div class="c-val cyan">847 <span style="font-size:12px;opacity:.6">kWh</span></div>
+        <div class="c-delta up">▲ +12% vs last week</div>
+      </div>
+      <div class="card pink">
+        <div class="c-label">AREC Issued</div>
+        <div class="c-val pink">6 <span style="font-size:12px;opacity:.6">RECs</span></div>
+        <div class="c-delta">720 kWh covered</div>
+      </div>
+      <div class="card green">
+        <div class="c-label">Offset Complete</div>
+        <div class="c-val green">680 <span style="font-size:12px;opacity:.6">kWh</span></div>
+        <div class="c-delta up">▲ +8% vs last week</div>
+      </div>
+      <div class="card yellow">
+        <div class="c-label">Pipeline Success</div>
+        <div class="c-val yellow">94 <span style="font-size:12px;opacity:.6">%</span></div>
+        <div class="c-delta warn">⚠ 2 runs failed</div>
+      </div>
+    </div>
+
+    <div class="g21">
+      <div>
+        <div class="sec cyan">Pipeline Status</div>
+        <div class="pipeline">
+          <div class="pipe-nodes">
+            <div class="pipe-node" onclick="alert('Generate: 847 kWh this week\nMiner #0x1A2B')">
+              <div class="pipe-circle done">⚡</div>
+              <div class="pipe-label done">Generate<br>847 kWh</div>
+            </div>
+            <div class="pipe-arr">›</div>
+            <div class="pipe-node" onclick="alert('AREC Issued: 6 RECs\n720 kWh covered')">
+              <div class="pipe-circle done">📄</div>
+              <div class="pipe-label done">Issue AREC<br>6 RECs</div>
+            </div>
+            <div class="pipe-arr">›</div>
+            <div class="pipe-node" onclick="alert('Pending: 1 REC (#0129) awaiting\nIssuer certification — 18h+')">
+              <div class="pipe-circle wait">⏳</div>
+              <div class="pipe-label wait">Liquidize<br>1 pending</div>
+            </div>
+            <div class="pipe-arr">›</div>
+            <div class="pipe-node" onclick="alert('Converted: 680 kWh\nSlippage: 0.8%')">
+              <div class="pipe-circle done">⇄</div>
+              <div class="pipe-label done">Convert<br>680 kWh</div>
+            </div>
+            <div class="pipe-arr">›</div>
+            <div class="pipe-node" onclick="alert('Offset: 680 kWh\nSeason total: 9,720 kWh')">
+              <div class="pipe-circle done">✦</div>
+              <div class="pipe-label done">Offset<br>680 kWh</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">Recent Runs</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Run ID</th><th>Trigger</th><th>Status</th><th>Offset</th><th>T2G</th></tr></thead>
+            <tbody>
+              <tr onclick="goto('runner',document.querySelectorAll('.nav-item')[3])">
+                <td class="td-code">#run-0491</td><td>Threshold</td>
+                <td><span class="tag tag-cyan">COMPLETED</span></td>
+                <td class="td-m">120 kWh</td><td>4h 23m</td>
+              </tr>
+              <tr>
+                <td class="td-code">#run-0490</td><td>Cron</td>
+                <td><span class="tag tag-yellow">PENDING_CERT</span></td>
+                <td class="td-m">—</td><td>ongoing</td>
+              </tr>
+              <tr>
+                <td class="td-code">#run-0489</td><td>Cron</td>
+                <td><span class="tag tag-cyan">COMPLETED</span></td>
+                <td class="td-m">95 kWh</td><td>6h 01m</td>
+              </tr>
+              <tr>
+                <td class="td-code">#run-0488</td><td>Manual</td>
+                <td><span class="tag tag-red">FAILED</span></td>
+                <td class="td-m">—</td><td>slippage exceeded</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec pink">Alerts</div>
+        <div class="alert alert-y">⚠ AKRE low — 42 remaining (~2 runs)</div>
+        <div class="alert alert-c">⏳ REC #0129 pending cert 18h+</div>
+
+        <div class="sec mt12">Stats / Week</div>
+        <div class="card mb12">
+          <div class="sr"><span class="sr-label">Avg T2G</span><span class="sr-val">5h 12m</span></div>
+          <div class="sr"><span class="sr-label">Gas spent</span><span class="sr-val">0.82 MATIC</span></div>
+          <div class="sr"><span class="sr-label">AKRE fees</span><span class="sr-val">128 AKRE</span></div>
+          <div class="sr"><span class="sr-label">Impact rank</span><span class="sr-val" style="color:var(--cyan)">#7 Scale</span></div>
+          <div class="sr"><span class="sr-label">Efficiency rank</span><span class="sr-val" style="color:var(--purple)">#3 Speed</span></div>
+        </div>
+
+        <div class="sec">Generation (7d)</div>
+        <div class="card">
+          <div class="spark">
+            <div class="sb" style="height:50%"></div>
+            <div class="sb" style="height:70%"></div>
+            <div class="sb" style="height:60%"></div>
+            <div class="sb" style="height:85%"></div>
+            <div class="sb" style="height:75%"></div>
+            <div class="sb" style="height:90%"></div>
+            <div class="sb" style="height:100%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:var(--text3)">
+            <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ MY AGENTS ════════════════════════════════ -->
+  <div class="page" id="page-agents">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'ag-list')">Agents</div>
+      <div class="tab" onclick="switchTab(this,'ag-detail')">Detail · GREENAGENT-01</div>
+    </div>
+
+    <div class="tc active" id="ag-list">
+      <div class="tbl-wrap mb12">
+        <table>
+          <thead><tr><th>Agent</th><th>Wallet</th><th>Strategy</th><th>Runs Today</th><th>Success</th><th>Streak</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr onclick="switchTabDirect('ag-detail')">
+              <td><div style="display:flex;align-items:center;gap:8px"><div class="av">A1</div><span class="td-m">GREENAGENT-01</span></div></td>
+              <td class="td-code">0x3aF2…9b1c</td>
+              <td><span class="tag tag-purple">DCA GREEN</span></td>
+              <td>3 / 5</td>
+              <td style="color:var(--cyan)">94%</td>
+              <td>23 days</td>
+              <td><span class="tag tag-cyan">RUNNING</span></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="background:linear-gradient(135deg,var(--pink),#800040)">A2</div><span class="td-m">SPEEDAGENT-02</span></div></td>
+              <td class="td-code">0x7cD1…4e2a</td>
+              <td><span class="tag tag-pink">MAX IMPACT</span></td>
+              <td>8 / 8</td>
+              <td style="color:var(--green)">100%</td>
+              <td>15 days</td>
+              <td><span class="tag tag-cyan">RUNNING</span></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="background:var(--text3);color:var(--bg)">A3</div><span class="td-m">LAZYAGENT-03</span></div></td>
+              <td class="td-code">0x9bC4…2f7d</td>
+              <td><span class="tag tag-cyan">LAZY GREEN</span></td>
+              <td>1 / 1</td>
+              <td style="color:var(--yellow)">78%</td>
+              <td>7 days</td>
+              <td><span class="tag tag-yellow">PAUSED</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-pink" onclick="alert('Add Agent')">+ ADD AGENT</button>
+    </div>
+
+    <div class="tc" id="ag-detail">
+      <div class="g21">
+        <div>
+          <div class="g3 mb12">
+            <div class="card"><div class="c-label">Total Offset</div><div class="c-val cyan" style="font-size:18px">2,340 kWh</div></div>
+            <div class="card green"><div class="c-label">Success Rate</div><div class="c-val green" style="font-size:18px">94%</div></div>
+            <div class="card yellow"><div class="c-label">Streak</div><div class="c-val yellow" style="font-size:18px">23d</div></div>
+          </div>
+          <div class="sec">Pipeline Runs</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Run ID</th><th>Time</th><th>Status</th><th>Steps</th><th>kWh</th></tr></thead>
+              <tbody>
+                <tr><td class="td-code">#run-0491</td><td>today 08:12</td><td><span class="tag tag-cyan">DONE</span></td><td>4/4</td><td class="td-m">120</td></tr>
+                <tr><td class="td-code">#run-0490</td><td>today 02:00</td><td><span class="tag tag-yellow">PENDING</span></td><td>2/4</td><td class="td-m">—</td></tr>
+                <tr><td class="td-code">#run-0489</td><td>yesterday</td><td><span class="tag tag-cyan">DONE</span></td><td>4/4</td><td class="td-m">95</td></tr>
+                <tr><td class="td-code">#run-0488</td><td>2d ago</td><td><span class="tag tag-red">FAILED</span></td><td>3/4</td><td class="td-m">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="sec">Reputation</div>
+          <div class="card mb12">
+            <div class="sr"><span class="sr-label">Streak</span><span class="sr-val">23 days</span></div>
+            <div class="sr"><span class="sr-label">Season success</span><span class="sr-val">94%</span></div>
+            <div class="sr"><span class="sr-label">Avg T2G</span><span class="sr-val">5h 12m</span></div>
+            <div class="sr"><span class="sr-label">Gas / kWh</span><span class="sr-val">0.0012 MATIC</span></div>
+            <div class="sr"><span class="sr-label">Season pts</span><span class="sr-val" style="color:var(--cyan)">4,820</span></div>
+          </div>
+          <div class="sec">Badges Unlocked</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="tag tag-cyan">🚀 Booted</span>
+            <span class="tag tag-cyan">💡 First Light</span>
+            <span class="tag tag-cyan">🔄 First Loop</span>
+            <span class="tag tag-green">🏃 7-Day Runner</span>
+            <span class="tag tag-purple">🌱 Green Builder</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ MINERS ════════════════════════════════ -->
+  <div class="page" id="page-miners">
+    <div class="sec cyan">Remote Miners <span style="color:var(--text3);font-family:var(--mono)">// 3 bound</span></div>
+    <div class="tbl-wrap mb12">
+      <table>
+        <thead><tr><th>Miner ID</th><th>Wallet</th><th>7d Generation</th><th>Available AREC</th><th>Data Status</th><th>Agent</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="td-code">#0x1A2B</td>
+            <td class="td-code">0x3aF2…9b1c</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="td-m">847 kWh</span>
+                <div class="spark" style="height:18px;width:48px">
+                  <div class="sb" style="height:50%"></div><div class="sb" style="height:70%"></div><div class="sb" style="height:90%"></div><div class="sb" style="height:100%"></div><div class="sb" style="height:80%"></div>
+                </div>
+              </div>
+            </td>
+            <td style="color:var(--green)">127 kWh</td>
+            <td><span class="tag tag-cyan">LIVE</span></td>
+            <td>GREENAGENT-01</td>
+          </tr>
+          <tr>
+            <td class="td-code">#0x3C4D</td>
+            <td class="td-code">0x7cD1…4e2a</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="td-m">1,240 kWh</span>
+                <div class="spark" style="height:18px;width:48px">
+                  <div class="sb" style="height:70%"></div><div class="sb" style="height:85%"></div><div class="sb" style="height:95%"></div><div class="sb" style="height:80%"></div><div class="sb" style="height:100%"></div>
+                </div>
+              </div>
+            </td>
+            <td style="color:var(--green)">240 kWh</td>
+            <td><span class="tag tag-cyan">LIVE</span></td>
+            <td>SPEEDAGENT-02</td>
+          </tr>
+          <tr>
+            <td class="td-code">#0x5E6F</td>
+            <td class="td-code">0x9bC4…2f7d</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="td-m">312 kWh</span>
+                <div class="spark" style="height:18px;width:48px">
+                  <div class="sb" style="height:40%"></div><div class="sb" style="height:30%"></div><div class="sb" style="height:50%"></div><div class="sb" style="height:20%"></div><div class="sb" style="height:45%"></div>
+                </div>
+              </div>
+            </td>
+            <td style="color:var(--yellow)">Below threshold</td>
+            <td><span class="tag tag-yellow">DELAY 2H</span></td>
+            <td>LAZYAGENT-03</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-c">ℹ Miner ownership is permanently bound to the initial wallet address — non-transferable. Plan your agent wallet accordingly.</div>
+  </div>
+
+  <!-- ════════════════════════════════ RUNNER ════════════════════════════════ -->
+  <div class="page" id="page-runner">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'run-strat')">Strategy</div>
+      <div class="tab" onclick="switchTab(this,'run-mon')">Monitor</div>
+      <div class="tab" onclick="switchTab(this,'run-alerts')">Alerts</div>
+    </div>
+
+    <!-- Strategy -->
+    <div class="tc active" id="run-strat">
+      <div class="g3 mb20">
+        <div class="strat" onclick="pickStrat(this)">
+          <div class="strat-name">LAZY GREEN</div>
+          <div class="strat-desc">Once per week. Low gas. Conservative slippage. Set and forget.</div>
+          <div class="strat-tags">
+            <span class="tag tag-cyan">weekly</span>
+            <span class="tag tag-cyan">low gas</span>
+          </div>
+        </div>
+        <div class="strat sel" onclick="pickStrat(this)">
+          <div class="strat-name">DCA GREEN</div>
+          <div class="strat-desc">Daily or threshold-triggered. Smooth and steady. Auto-retry on fail.</div>
+          <div class="strat-tags">
+            <span class="tag tag-cyan">daily</span>
+            <span class="tag tag-cyan">threshold</span>
+            <span class="tag tag-cyan">auto-retry</span>
+          </div>
+        </div>
+        <div class="strat" onclick="pickStrat(this)">
+          <div class="strat-name">MAX IMPACT</div>
+          <div class="strat-desc">Event-driven. Execute full pipeline immediately on CERTIFIED. Leaderboard-optimized.</div>
+          <div class="strat-tags">
+            <span class="tag tag-pink">event-driven</span>
+            <span class="tag tag-pink">high freq</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div>
+          <div class="sec">Triggers</div>
+          <div class="card">
+            <div class="sr"><span class="sr-label">Cron</span><span class="td-code">0 8 * * *</span></div>
+            <div class="sr"><span class="sr-label">Min generation</span><span class="sr-val">≥ 100 kWh</span></div>
+            <div class="sr"><span class="sr-label">Min ART balance</span><span class="sr-val">≥ 50 ART</span></div>
+            <div class="sr"><span class="sr-label">On CERTIFIED event</span><span class="sr-val"><span class="tag tag-cyan">ON</span></span></div>
+          </div>
+        </div>
+        <div>
+          <div class="sec">Risk Controls</div>
+          <div class="card">
+            <div class="sr"><span class="sr-label">max_slippage_bps</span><span class="sr-val">150</span></div>
+            <div class="sr"><span class="sr-label">max_kwh_per_run</span><span class="sr-val">200</span></div>
+            <div class="sr"><span class="sr-label">daily_max_runs</span><span class="sr-val">5</span></div>
+            <div class="sr"><span class="sr-label">min_akre_reserve</span><span class="sr-val">50</span></div>
+            <div class="sr"><span class="sr-label">auto_pause_on_error</span><span class="sr-val">3 consecutive</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn btn-pink" onclick="alert('Saved!')">SAVE STRATEGY</button>
+        <button class="btn btn-ghost" onclick="switchTabDirect('run-mon')">VIEW MONITOR →</button>
+      </div>
+    </div>
+
+    <!-- Monitor -->
+    <div class="tc" id="run-mon">
+      <div class="g21">
+        <div>
+          <div class="sec cyan">Run #run-0491 · COMPLETED</div>
+          <div class="sm-step done">
+            <div class="sm-ic">✓</div>
+            <div class="sm-body">
+              <div class="sm-name">MINT_REQUESTED</div>
+              <div class="sm-detail">tx: 0xabc123…def456 · mintRECRequest(tokenId=0128)</div>
+            </div>
+            <div class="sm-time">08:12</div>
+          </div>
+          <div class="sm-step done">
+            <div class="sm-ic">✓</div>
+            <div class="sm-body">
+              <div class="sm-name">CERTIFIED</div>
+              <div class="sm-detail">Issuer certification complete · waited 3h 42m</div>
+            </div>
+            <div class="sm-time">11:54</div>
+          </div>
+          <div class="sm-step done">
+            <div class="sm-ic">✓</div>
+            <div class="sm-body">
+              <div class="sm-name">LIQUIDIZED</div>
+              <div class="sm-detail">tx: 0x789def…012abc · liquidizeREC · 120 ART out</div>
+            </div>
+            <div class="sm-time">11:56</div>
+          </div>
+          <div class="sm-step done">
+            <div class="sm-ic">✓</div>
+            <div class="sm-body">
+              <div class="sm-name">KWH_CONVERTED</div>
+              <div class="sm-detail">tx: 0xconv…ert99 · 120 ART → 120 kWh · slippage 0.8%</div>
+            </div>
+            <div class="sm-time">11:57</div>
+          </div>
+          <div class="sm-step done">
+            <div class="sm-ic">✓</div>
+            <div class="sm-body">
+              <div class="sm-name">OFFSET COMPLETE</div>
+              <div class="sm-detail">tx: 0xgreen…box01 · makeGreenBox · 120 kWh offset</div>
+            </div>
+            <div class="sm-time">11:59</div>
+          </div>
+
+          <div class="sec mt12 yellow">Run #run-0490 · IN PROGRESS</div>
+          <div class="sm-step done">
+            <div class="sm-ic">✓</div>
+            <div class="sm-body"><div class="sm-name">MINT_REQUESTED</div><div class="sm-detail">tx: 0xpend…ing01 · tokenId=0129</div></div>
+            <div class="sm-time">02:00</div>
+          </div>
+          <div class="sm-step active">
+            <div class="sm-ic">⏳</div>
+            <div class="sm-body"><div class="sm-name">PENDING_CERTIFICATION</div><div class="sm-detail">Awaiting Issuer · elapsed 18h 32m · avg is 4h</div></div>
+            <div class="sm-time">now</div>
+          </div>
+          <div class="sm-step pend">
+            <div class="sm-ic">○</div>
+            <div class="sm-body"><div class="sm-name">LIQUIDIZE</div><div class="sm-detail">—</div></div>
+            <div class="sm-time">—</div>
+          </div>
+          <div class="sm-step pend">
+            <div class="sm-ic">○</div>
+            <div class="sm-body"><div class="sm-name">CONVERT + OFFSET</div><div class="sm-detail">—</div></div>
+            <div class="sm-time">—</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sec">Run #0491 Costs</div>
+          <div class="card mb12">
+            <div class="sr"><span class="sr-label">Gas (MATIC)</span><span class="sr-val">0.21</span></div>
+            <div class="sr"><span class="sr-label">AKRE fee</span><span class="sr-val">32 AKRE</span></div>
+            <div class="sr"><span class="sr-label">Slippage</span><span class="sr-val" style="color:var(--green)">0.8%</span></div>
+            <div class="sr"><span class="sr-label">T2G</span><span class="sr-val">3h 47m</span></div>
+            <div class="sr"><span class="sr-label">Offset</span><span class="sr-val" style="color:var(--cyan)">120 kWh ✓</span></div>
+          </div>
+          <div class="sec">Controls</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button class="btn btn-pink" onclick="alert('Run triggered!')">▷ RUN NOW</button>
+            <button class="btn btn-cyan" onclick="alert('Paused')">⏸ PAUSE RUNNER</button>
+            <button class="btn btn-ghost" style="border-color:var(--red);color:var(--red)" onclick="alert('Emergency stop!')">⬛ EMERGENCY STOP</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="tc" id="run-alerts">
+      <div class="alert alert-y">⚠ AKRE LOW · 42 remaining, below reserve threshold of 50 · 2h ago</div>
+      <div class="alert alert-c">⏳ CERT DELAY · Run #run-0490 pending 18h — avg is 4h. Check Issuer status. · 1h ago</div>
+      <div class="alert alert-r">✕ RUN FAILED · #run-0488 · step: KWH_CONVERTED · slippage 3.2% > limit 1.5% · auto-retried 3× · yesterday</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ ASSETS ════════════════════════════════ -->
+  <div class="page" id="page-assets">
+    <div class="g4 mb20">
+      <div class="card">
+        <div class="c-label">AREC Holdings</div>
+        <div class="c-val cyan" style="font-size:18px">8 RECs</div>
+        <div class="c-delta">1 pending · 5 liquidizable</div>
+      </div>
+      <div class="card pink">
+        <div class="c-label">ART Balance</div>
+        <div class="c-val pink" style="font-size:18px">340 ART</div>
+        <div class="c-delta">≈ 340 kWh redeemable</div>
+      </div>
+      <div class="card green">
+        <div class="c-label">kWh Token</div>
+        <div class="c-val green" style="font-size:18px">85 kWh</div>
+        <div class="c-delta">ready to offset</div>
+      </div>
+      <div class="card yellow">
+        <div class="c-label">AKRE (Fees)</div>
+        <div class="c-val yellow" style="font-size:18px">42 AKRE</div>
+        <div class="c-delta warn">⚠ below reserve</div>
+      </div>
+    </div>
+    <div class="sec">Transaction History</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Time</th><th>Action</th><th>Asset</th><th>Amount</th><th>Tx Hash</th><th>Run</th></tr></thead>
+        <tbody>
+          <tr><td>today 11:59</td><td><span class="tag tag-green">OFFSET</span></td><td>kWh</td><td class="td-m">−120 kWh</td><td class="td-code">0xgreen…box01</td><td class="td-code">#run-0491</td></tr>
+          <tr><td>today 11:57</td><td><span class="tag tag-cyan">CONVERT</span></td><td>ART → kWh</td><td class="td-m">−120 ART / +120 kWh</td><td class="td-code">0xconv…ert99</td><td class="td-code">#run-0491</td></tr>
+          <tr><td>today 11:56</td><td><span class="tag tag-purple">LIQUIDIZE</span></td><td>AREC → ART</td><td class="td-m">−1 REC / +120 ART</td><td class="td-code">0x789d…012abc</td><td class="td-code">#run-0491</td></tr>
+          <tr><td>yesterday</td><td><span class="tag tag-green">OFFSET</span></td><td>kWh</td><td class="td-m">−95 kWh</td><td class="td-code">0xgb…9923</td><td class="td-code">#run-0489</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ ALLIANCE ════════════════════════════════ -->
+  <div class="page" id="page-alliance">
+    <div class="season-banner">
+      <div class="sb-icon">⬡</div>
+      <div class="sb-info">
+        <div class="sb-title">ARKREEN AGENT ALLIANCE · SEASON 1</div>
+        <div class="sb-meta">23 DAYS LEFT · PRIZE POOL: 500,000 AKRE · 1,247 AGENTS ACTIVE</div>
+      </div>
+      <div class="sb-score">
+        <div style="font-size:9px;color:var(--text3);letter-spacing:2px">SEASON SCORE</div>
+        <div class="sb-pts">4,820</div>
+        <div class="sb-rank">SCALE #7 · EFFICIENCY #3</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'al-lb')">Leaderboards</div>
+      <div class="tab" onclick="switchTab(this,'al-quests')">Quests</div>
+      <div class="tab" onclick="switchTab(this,'al-badges')">Badges</div>
+      <div class="tab" onclick="switchTab(this,'al-squad')">Squad</div>
+    </div>
+
+    <!-- Leaderboards -->
+    <div class="tc active" id="al-lb">
+      <div class="g2">
+        <div>
+          <div class="sec cyan">Scale Board <span style="color:var(--text3);font-family:var(--mono)">//  cumulative offset kWh</span></div>
+          <div class="tbl-wrap">
+            <div class="lb-row" style="background:rgba(255,215,0,0.04)">
+              <div class="lb-rank g1">01</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,#ffd700,#b8860b)">G1</div>
+              <div class="lb-info"><div class="lb-name">GIGAGREEN-001</div><div class="lb-meta">MAX IMPACT · 3 MINERS</div></div>
+              <div class="lb-bar" style="margin-right:8px"><div class="pbar-wrap"><div class="pbar" style="width:100%"></div></div></div>
+              <div class="lb-score"><div class="lb-val">48,200</div><div class="lb-unit">kWh</div></div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank g2">02</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,#aaa,#555)">G2</div>
+              <div class="lb-info"><div class="lb-name">ECOBOT-ALPHA</div><div class="lb-meta">DCA GREEN · 2 MINERS</div></div>
+              <div class="lb-bar" style="margin-right:8px"><div class="pbar-wrap"><div class="pbar" style="width:78%"></div></div></div>
+              <div class="lb-score"><div class="lb-val">37,600</div><div class="lb-unit">kWh</div></div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank g3">03</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,#cd7f32,#8b4513)">G3</div>
+              <div class="lb-info"><div class="lb-name">SOLARAGENT-99</div><div class="lb-meta">MAX IMPACT · 1 MINER</div></div>
+              <div class="lb-bar" style="margin-right:8px"><div class="pbar-wrap"><div class="pbar" style="width:60%"></div></div></div>
+              <div class="lb-score"><div class="lb-val">28,900</div><div class="lb-unit">kWh</div></div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">04</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,var(--pink),#600)">G4</div>
+              <div class="lb-info"><div class="lb-name">WINDRUNNER-X</div><div class="lb-meta">DCA GREEN · 2 MINERS</div></div>
+              <div class="lb-bar" style="margin-right:8px"><div class="pbar-wrap"><div class="pbar" style="width:45%"></div></div></div>
+              <div class="lb-score"><div class="lb-val">21,700</div><div class="lb-unit">kWh</div></div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">05</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,var(--purple),#400080)">G5</div>
+              <div class="lb-info"><div class="lb-name">PURPLENODE</div><div class="lb-meta">LAZY GREEN · 1 MINER</div></div>
+              <div class="lb-bar" style="margin-right:8px"><div class="pbar-wrap"><div class="pbar" style="width:38%"></div></div></div>
+              <div class="lb-score"><div class="lb-val">18,300</div><div class="lb-unit">kWh</div></div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">06</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,var(--yellow),#806000)">G6</div>
+              <div class="lb-info"><div class="lb-name">CLEANCORE-07</div><div class="lb-meta">DCA GREEN · 1 MINER</div></div>
+              <div class="lb-bar" style="margin-right:8px"><div class="pbar-wrap"><div class="pbar" style="width:29%"></div></div></div>
+              <div class="lb-score"><div class="lb-val">13,900</div><div class="lb-unit">kWh</div></div>
+            </div>
+            <div class="lb-row me" style="background:rgba(0,245,255,0.04)">
+              <div class="lb-rank" style="color:var(--cyan)">07</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,var(--cyan),#006688)">A1</div>
+              <div class="lb-info"><div class="lb-name">GREENAGENT-01 <span class="tag tag-cyan" style="font-size:8px">YOU</span></div><div class="lb-meta">DCA GREEN · 1 MINER</div></div>
+              <div class="lb-bar" style="margin-right:8px"><div class="pbar-wrap"><div class="pbar" style="width:20%"></div></div></div>
+              <div class="lb-score"><div class="lb-val">9,720</div><div class="lb-unit">kWh</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sec pink">Efficiency Board <span style="color:var(--text3);font-family:var(--mono)">//  T2G score</span></div>
+          <div class="tbl-wrap mb12">
+            <div class="lb-row" style="background:rgba(255,215,0,0.04)">
+              <div class="lb-rank g1">01</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,var(--pink),#600)">E1</div>
+              <div class="lb-info"><div class="lb-name">SPEEDAGENT-02</div><div class="lb-meta">MAX IMPACT · T2G 2h10m</div></div>
+              <div class="lb-score"><div class="lb-val" style="color:var(--pink)">9,840</div><div class="lb-unit">AP</div></div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank g2">02</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,#58a6ff,#003399)">E2</div>
+              <div class="lb-info"><div class="lb-name">QUICKGREEN-X</div><div class="lb-meta">MAX IMPACT · T2G 3h05m</div></div>
+              <div class="lb-score"><div class="lb-val">8,120</div><div class="lb-unit">AP</div></div>
+            </div>
+            <div class="lb-row me" style="background:rgba(0,245,255,0.04)">
+              <div class="lb-rank g3" style="color:var(--cyan)">03</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,var(--cyan),#006688)">A1</div>
+              <div class="lb-info"><div class="lb-name">GREENAGENT-01 <span class="tag tag-cyan" style="font-size:8px">YOU</span></div><div class="lb-meta">DCA GREEN · T2G 5h12m</div></div>
+              <div class="lb-score"><div class="lb-val">6,430</div><div class="lb-unit">AP</div></div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">04</div>
+              <div class="lb-av" style="background:linear-gradient(135deg,var(--purple),#300060)">E4</div>
+              <div class="lb-info"><div class="lb-name">PRECISIONBOT</div><div class="lb-meta">DCA GREEN · T2G 5h48m</div></div>
+              <div class="lb-score"><div class="lb-val">5,900</div><div class="lb-unit">AP</div></div>
+            </div>
+          </div>
+
+          <div class="sec">Season Score Formula</div>
+          <div class="card">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:8px;letter-spacing:1px">Score = 0.7 × IP + 0.3 × AP</div>
+            <div class="sr"><span class="sr-label">Impact Points (IP)</span><span class="sr-val">3,118 = √9720</span></div>
+            <div class="sr"><span class="sr-label">Automation Points (AP)</span><span class="sr-val">6,430</span></div>
+            <div class="sr"><span class="sr-label">Season Score</span><span class="sr-val" style="color:var(--cyan)">4,111</span></div>
+            <div class="sr"><span class="sr-label">Overall Rank</span><span class="sr-val">#5</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quests -->
+    <div class="tc" id="al-quests">
+      <div class="g2 mb12">
+        <div class="quest">
+          <div class="q-head"><div class="q-icon">📄</div><div><div class="q-title">QUEST A · ISSUE AREC</div><div class="q-desc">Complete 10 AREC issuances (mintRECRequest → Certified)</div></div></div>
+          <div class="q-prog-row"><span>PROGRESS</span><span>8 / 10</span></div>
+          <div class="pbar-wrap"><div class="pbar" style="width:80%"></div></div>
+          <div class="q-reward">Reward: <strong>+500 AP</strong> · Unlocks "First Light" badge</div>
+        </div>
+        <div class="quest">
+          <div class="q-head"><div class="q-icon">💧</div><div><div class="q-title">QUEST B · LIQUIDIZE ART</div><div class="q-desc">Complete 8 liquidize operations (AREC → ART)</div></div></div>
+          <div class="q-prog-row"><span>PROGRESS</span><span>6 / 8</span></div>
+          <div class="pbar-wrap"><div class="pbar" style="width:75%"></div></div>
+          <div class="q-reward">Reward: <strong>+400 AP</strong></div>
+        </div>
+        <div class="quest">
+          <div class="q-head"><div class="q-icon">⇄</div><div><div class="q-title">QUEST C · CONVERT kWh</div><div class="q-desc">Complete 8 ART → kWh conversions</div></div></div>
+          <div class="q-prog-row"><span>PROGRESS</span><span>6 / 8</span></div>
+          <div class="pbar-wrap"><div class="pbar" style="width:75%"></div></div>
+          <div class="q-reward">Reward: <strong>+400 AP</strong></div>
+        </div>
+        <div class="quest">
+          <div class="q-head"><div class="q-icon">✦</div><div><div class="q-title">QUEST D · GREENBOX OFFSET</div><div class="q-desc">Complete 5 full GreenBox offsets (≥ 50 kWh each)</div></div></div>
+          <div class="q-prog-row"><span>PROGRESS</span><span>4 / 5</span></div>
+          <div class="pbar-wrap"><div class="pbar" style="width:80%"></div></div>
+          <div class="q-reward">Reward: <strong>+800 AP</strong> · "First Loop" badge · leaderboard entry</div>
+        </div>
+      </div>
+      <div class="sec yellow">Advanced Quests</div>
+      <div class="g3">
+        <div class="quest">
+          <div class="q-head"><div class="q-icon">⚡</div><div><div class="q-title">FAST LANE</div><div class="q-desc">3 consecutive runs with T2G &lt; 6h</div></div></div>
+          <div class="q-prog-row"><span>PROGRESS</span><span>2 / 3</span></div>
+          <div class="pbar-wrap"><div class="pbar yellow" style="width:66%"></div></div>
+          <div class="q-reward">Reward: <strong>Fast Lane badge</strong></div>
+        </div>
+        <div class="quest">
+          <div class="q-head"><div class="q-icon">🏃</div><div><div class="q-title">7-DAY STREAK</div><div class="q-desc">Complete at least 1 key step per day for 7 days</div></div></div>
+          <div class="q-prog-row"><span>PROGRESS</span><span>COMPLETE</span></div>
+          <div class="pbar-wrap"><div class="pbar green" style="width:100%"></div></div>
+          <div class="q-reward"><span class="tag tag-cyan">✓ CLAIMED</span> · 7-Day Runner badge</div>
+        </div>
+        <div class="quest">
+          <div class="q-head"><div class="q-icon">🌱</div><div><div class="q-title">GREEN BUILDER</div><div class="q-desc">Cumulative offset ≥ 1,000 kWh</div></div></div>
+          <div class="q-prog-row"><span>PROGRESS</span><span>COMPLETE</span></div>
+          <div class="pbar-wrap"><div class="pbar green" style="width:100%"></div></div>
+          <div class="q-reward"><span class="tag tag-cyan">✓ CLAIMED</span> · Green Builder badge</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="tc" id="al-badges">
+      <div class="sec">Onboarding</div>
+      <div class="bwall">
+        <div class="badge-item"><div class="b-emoji">🚀</div><div class="b-name">BOOTED</div><div class="b-cat">BIND AGENT + MINER</div></div>
+        <div class="badge-item"><div class="b-emoji">💡</div><div class="b-name">FIRST LIGHT</div><div class="b-cat">FIRST AREC CERTIFIED</div></div>
+        <div class="badge-item"><div class="b-emoji">🔄</div><div class="b-name">FIRST LOOP</div><div class="b-cat">FIRST FULL OFFSET</div></div>
+        <div class="badge-item locked"><div class="b-emoji">🎓</div><div class="b-name">MENTOR</div><div class="b-cat">BRING NEW AGENT</div></div>
+      </div>
+      <div class="sec">Reliability</div>
+      <div class="bwall">
+        <div class="badge-item"><div class="b-emoji">🏃</div><div class="b-name">7-DAY RUNNER</div><div class="b-cat">7 CONSECUTIVE DAYS</div></div>
+        <div class="badge-item locked"><div class="b-emoji">💯</div><div class="b-name">99% UPTIME</div><div class="b-cat">SEASON SUCCESS ≥99%</div></div>
+        <div class="badge-item locked"><div class="b-emoji">🧘</div><div class="b-name">ZERO PANIC</div><div class="b-cat">NO EMERGENCY STOPS</div></div>
+        <div class="badge-item locked"><div class="b-emoji">⚡</div><div class="b-name">FAST LANE</div><div class="b-cat">AVG T2G &lt; 6H</div></div>
+      </div>
+      <div class="sec">Impact</div>
+      <div class="bwall">
+        <div class="badge-item"><div class="b-emoji">🌱</div><div class="b-name">GREEN STARTER</div><div class="b-cat">≥ 100 kWh</div></div>
+        <div class="badge-item"><div class="b-emoji">🌲</div><div class="b-name">GREEN BUILDER</div><div class="b-cat">≥ 1,000 kWh</div></div>
+        <div class="badge-item locked"><div class="b-emoji">🏔</div><div class="b-name">GREEN TITAN</div><div class="b-cat">≥ 10,000 kWh</div></div>
+        <div class="badge-item locked"><div class="b-emoji">👥</div><div class="b-name">SQUAD FOUNDER</div><div class="b-cat">CREATE + FIRST OFFSET</div></div>
+      </div>
+    </div>
+
+    <!-- Squad -->
+    <div class="tc" id="al-squad">
+      <div style="text-align:center;padding:50px 20px;border:1px solid var(--border)">
+        <div style="font-size:48px;margin-bottom:12px">⬡</div>
+        <div style="font-family:var(--orb);font-size:16px;color:var(--cyan);text-shadow:var(--glow-c);margin-bottom:8px;letter-spacing:2px">FORM A SQUAD</div>
+        <div style="color:var(--text3);font-size:11px;max-width:380px;margin:0 auto 20px;line-height:1.7;letter-spacing:0.5px">
+          Team up with other Agents to combine greening impact.<br>Squad rank is determined by total offset kWh × member diversity.
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button class="btn btn-pink" onclick="alert('Create Squad')">CREATE SQUAD</button>
+          <button class="btn btn-cyan" onclick="alert('Browse')">BROWSE SQUADS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ DEV ════════════════════════════════ -->
+  <div class="page" id="page-dev">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'dev-keys')">API Keys</div>
+      <div class="tab" onclick="switchTab(this,'dev-sdk')">SDK</div>
+      <div class="tab" onclick="switchTab(this,'dev-errors')">Error Codes</div>
+    </div>
+
+    <div class="tc active" id="dev-keys">
+      <div class="sec">API Keys & Webhooks</div>
+      <div class="card mb12">
+        <div class="sr"><span class="sr-label">Live API Key</span><span class="td-code">a4a_sk_live_••••••••••••4f2a</span></div>
+        <div class="sr"><span class="sr-label">Webhook URL</span><span class="td-code">https://your-server.com/a4a/hook</span></div>
+        <div class="sr"><span class="sr-label">Events</span><span class="sr-val">CERTIFIED · COMPLETED · FAILED</span></div>
+        <div class="sr"><span class="sr-label">Sandbox</span><span class="tag tag-cyan">Polygon Mumbai</span></div>
+      </div>
+      <button class="btn btn-cyan">+ NEW API KEY</button>
+    </div>
+
+    <div class="tc" id="dev-sdk">
+      <div class="sec">TypeScript SDK</div>
+      <div class="code-block">
+        <span class="cc">// npm install @arkreen/a4a-sdk</span><br>
+        <span class="ck">import</span> { A4AClient } <span class="ck">from</span> <span class="cs">'@arkreen/a4a-sdk'</span>;<br><br>
+        <span class="ck">const</span> client = <span class="ck">new</span> <span class="cf">A4AClient</span>({<br>
+        &nbsp;&nbsp;apiKey: <span class="cs">'a4a_sk_live_...'</span>,<br>
+        &nbsp;&nbsp;agentWallet: <span class="cs">'0x3aF2...9b1c'</span>,<br>
+        });<br><br>
+        <span class="cc">// trigger a run</span><br>
+        <span class="ck">const</span> run = <span class="ck">await</span> client.<span class="cf">triggerRun</span>({ strategy: <span class="cs">'dca'</span> });<br>
+        <span class="cc">// { id: '#run-0492', status: 'CREATED' }</span><br><br>
+        <span class="cc">// poll or listen</span><br>
+        client.<span class="cf">on</span>(<span class="cs">'COMPLETED'</span>, (e) => {<br>
+        &nbsp;&nbsp;console.<span class="cf">log</span>(<span class="cs">`✓ offset <span style="color:var(--purple)">${e.offsetKwh}</span> kWh`</span>);<br>
+        });
+      </div>
+    </div>
+
+    <div class="tc" id="dev-errors">
+      <div class="sec">Error Reference</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Code</th><th>Step</th><th>Description</th><th>Resolution</th></tr></thead>
+          <tbody>
+            <tr><td class="td-code">E001</td><td>MINT</td><td>Generation below minimum threshold</td><td>Accumulate more kWh</td></tr>
+            <tr><td class="td-code">E002</td><td>MINT</td><td>Insufficient AKRE balance</td><td>Top up AKRE above min_reserve</td></tr>
+            <tr><td class="td-code">E003</td><td>CERT</td><td>Issuer certification timeout</td><td>Wait or contact Arkreen support</td></tr>
+            <tr><td class="td-code">E004</td><td>CONVERT</td><td>Slippage exceeded limit</td><td>Raise max_slippage_bps or retry later</td></tr>
+            <tr><td class="td-code">E005</td><td>ANY</td><td>Insufficient gas (MATIC)</td><td>Top up MATIC</td></tr>
+            <tr><td class="td-code">E006</td><td>ANY</td><td>Contract revert</td><td>Check tx log — likely decimals mismatch</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  const cfg = {
+    dashboard:{ t:'DASHBOARD',     s:'SEASON 1 · 23D LEFT',       b:'EXECUTE' },
+    agents:   { t:'MY AGENTS',     s:'3 AGENTS ACTIVE',            b:'ADD AGENT' },
+    miners:   { t:'MINERS',        s:'3 BOUND',                    b:null },
+    runner:   { t:'RUNNER',        s:'DCA GREEN · RUNNING',        b:'RUN NOW' },
+    assets:   { t:'ASSETS',        s:null,                         b:null },
+    alliance: { t:'ALLIANCE',      s:'SEASON 1 · SCALE #7',        b:'JOIN SQUAD' },
+    dev:      { t:'DEVELOPER',     s:'API v1',                     b:'NEW KEY' },
+  };
+
+  function goto(page, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const c = cfg[page] || {};
+    document.getElementById('tb-title').textContent = c.t || page.toUpperCase();
+    document.getElementById('tb-sub').textContent = c.s || '';
+    const btn = document.getElementById('tb-btn');
+    btn.textContent = c.b || '';
+    btn.style.display = c.b ? '' : 'none';
+  }
+
+  function switchTab(el, id) {
+    const scope = el.closest('.page') || document.body;
+    scope.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    scope.querySelectorAll('.tc').forEach(c => c.classList.remove('active'));
+    const t = scope.querySelector('#' + id);
+    if (t) t.classList.add('active');
+  }
+
+  function switchTabDirect(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const scope = el.closest('.page') || document.body;
+    const tcs = scope.querySelectorAll('.tc');
+    const tabs = scope.querySelectorAll('.tab');
+    tcs.forEach(c => c.classList.remove('active'));
+    tabs.forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const idx = Array.from(tcs).indexOf(el);
+    if (tabs[idx]) tabs[idx].classList.add('active');
+  }
+
+  function pickStrat(el) {
+    el.closest('.g3').querySelectorAll('.strat').forEach(s => s.classList.remove('sel'));
+    el.classList.add('sel');
+  }
+</script>
+</body>
+</html>
