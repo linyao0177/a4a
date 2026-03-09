@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    /* ── Arkreen Brand Tokens ─────────────────────────────────────── */
+    /* ── Arkreen Brand Tokens — Dark (default) ───────────────────── */
     :root {
       --green:        #1EE08B;
       --green-dim:    #0DAF66;
@@ -24,7 +24,46 @@
       --font:         'Montserrat', sans-serif;
       --mono:         'Space Mono', monospace;
       --radius:       12px;
+      --nav-bg:       rgba(7, 17, 28, 0.85);
+      --logo-filter:  none;
     }
+
+    /* ── Light mode overrides ─────────────────────────────────────── */
+    html.light {
+      --green:        #0DAF66;
+      --green-dim:    #0A8F52;
+      --green-glow:   rgba(13, 175, 102, 0.1);
+      --green-border: rgba(13, 175, 102, 0.3);
+      --bg:           #F4FBF7;
+      --bg-2:         #EAF6F0;
+      --bg-card:      #FFFFFF;
+      --bg-card2:     rgba(255, 255, 255, 0.9);
+      --text:         #0D2018;
+      --text-muted:   rgba(13, 32, 24, 0.55);
+      --text-dim:     rgba(13, 32, 24, 0.3);
+      --nav-bg:       rgba(244, 251, 247, 0.9);
+      --logo-filter:  none;
+    }
+
+    /* ── Theme toggle ─────────────────────────────────────────────── */
+    .theme-toggle {
+      width: 44px; height: 24px; border-radius: 99px;
+      background: var(--green-border);
+      border: 1px solid var(--green-border);
+      cursor: pointer; position: relative;
+      transition: background 0.25s;
+      flex-shrink: 0;
+    }
+    .theme-toggle-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--green);
+      transition: transform 0.25s, background 0.25s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; line-height: 1;
+    }
+    html.light .theme-toggle-thumb { transform: translateX(20px); }
+    html.light .theme-toggle { background: var(--green-glow); }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -78,7 +117,7 @@
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       backdrop-filter: blur(12px);
-      background: rgba(7, 17, 28, 0.85);
+      background: var(--nav-bg);
       border-bottom: 1px solid var(--green-border);
     }
     .nav-inner {
@@ -398,6 +437,9 @@
         <a href="#community">Community</a>
         <a href="https://github.com/linyao0177/a4a" target="_blank">GitHub</a>
         <a href="#install">Get Started</a>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode" aria-label="Toggle theme">
+          <div class="theme-toggle-thumb" id="toggle-icon">🌙</div>
+        </button>
         <span class="btn-nav" style="cursor:default; opacity:0.7; display:flex; flex-direction:column; align-items:center; line-height:1.2; padding: 6px 20px;">
           <span>Launch App</span>
           <span style="font-size:9px; font-weight:500; opacity:0.7; letter-spacing:0.05em;">Coming Soon</span>
@@ -777,5 +819,18 @@
     </div>
   </footer>
 
+  <script>
+    const icon = document.getElementById('toggle-icon');
+    function toggleTheme() {
+      const isLight = document.documentElement.classList.toggle('light');
+      icon.textContent = isLight ? '☀️' : '🌙';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+    // Restore saved preference
+    if (localStorage.getItem('theme') === 'light') {
+      document.documentElement.classList.add('light');
+      icon.textContent = '☀️';
+    }
+  </script>
 </body>
 </html>
