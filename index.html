@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arkreen for Agents — AI-Powered Green Pipeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Arkreen Brand Tokens ─────────────────────────────────────── */
+    :root {
+      --green:        #1EE08B;
+      --green-dim:    #0DAF66;
+      --green-glow:   rgba(30, 224, 139, 0.18);
+      --green-border: rgba(30, 224, 139, 0.25);
+      --bg:           #07111C;
+      --bg-2:         #0B1A28;
+      --bg-card:      #0E2035;
+      --bg-card2:     rgba(14, 32, 53, 0.7);
+      --text:         #E8F8F2;
+      --text-muted:   rgba(232, 248, 242, 0.5);
+      --text-dim:     rgba(232, 248, 242, 0.3);
+      --white:        #FFFFFF;
+      --font:         'Montserrat', sans-serif;
+      --mono:         'Space Mono', monospace;
+      --radius:       12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Grid noise ─────────────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(30,224,139,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(30,224,139,0.04) 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    /* ── Utility ────────────────────────────────────────────────────── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 99px;
+      border: 1px solid var(--green-border);
+      background: var(--green-glow);
+      color: var(--green); font-size: 12px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.8s ease-in-out infinite; }
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--green); margin-bottom: 12px;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--green) 0%, #7FFFCF 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .green { color: var(--green); }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav ────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(7, 17, 28, 0.85);
+      border-bottom: 1px solid var(--green-border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; padding: 0 24px; max-width: 1160px; margin: 0 auto;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 18px; letter-spacing: -0.01em;
+    }
+    .nav-logo-mark {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--green), #0DAF66);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 900; color: var(--bg);
+    }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--text-muted); transition: color 0.15s; }
+    .nav-links a:hover { color: var(--text); }
+    .btn-nav {
+      padding: 8px 20px; border-radius: 6px;
+      background: var(--green); color: var(--bg);
+      font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+      transition: all 0.15s; border: none; cursor: pointer;
+    }
+    .btn-nav:hover { background: #3FFFA0; box-shadow: 0 0 20px rgba(30,224,139,0.4); }
+
+    /* ── Hero ───────────────────────────────────────────────────────── */
+    .hero {
+      padding: 160px 0 100px;
+      position: relative; z-index: 1;
+      text-align: center;
+    }
+    .hero-tag { margin-bottom: 28px; }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-muted);
+      max-width: 640px; margin: 0 auto 40px;
+      font-weight: 400; line-height: 1.7;
+    }
+    .hero-cta {
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: 8px;
+      background: var(--green); color: var(--bg);
+      font-size: 15px; font-weight: 700;
+      transition: all 0.2s; cursor: pointer; border: none;
+      box-shadow: 0 0 32px rgba(30,224,139,0.25);
+    }
+    .btn-primary:hover { background: #3FFFA0; box-shadow: 0 0 48px rgba(30,224,139,0.45); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: 8px;
+      background: transparent; color: var(--text);
+      font-size: 15px; font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.2s; cursor: pointer;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.05); }
+
+    .hero-stats {
+      display: flex; justify-content: center; gap: 48px;
+      margin-top: 72px; flex-wrap: wrap;
+      padding-top: 40px;
+      border-top: 1px solid var(--green-border);
+    }
+    .hero-stat-item { text-align: center; }
+    .hero-stat-num {
+      font-size: 32px; font-weight: 800;
+      color: var(--green); letter-spacing: -0.02em;
+      display: block;
+    }
+    .hero-stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* ── Pipeline visual ─────────────────────────────────────────────── */
+    .pipeline-section {
+      padding: 100px 0;
+      position: relative; z-index: 1;
+    }
+    .pipeline-header { text-align: center; margin-bottom: 60px; }
+    .pipeline-header h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; margin-bottom: 16px; }
+    .pipeline-header p { color: var(--text-muted); max-width: 560px; margin: 0 auto; font-size: 16px; }
+
+    .pipeline-flow {
+      display: flex; align-items: center;
+      background: var(--bg-card); border: 1px solid var(--green-border);
+      border-radius: 16px; padding: 40px 32px;
+      overflow-x: auto; gap: 0;
+    }
+    .pipeline-step {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; flex: 1; min-width: 140px;
+    }
+    .step-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(30,224,139,0.15), rgba(30,224,139,0.05));
+      border: 2px solid var(--green-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 16px;
+      transition: all 0.3s;
+    }
+    .pipeline-step:hover .step-circle {
+      border-color: var(--green);
+      box-shadow: 0 0 24px rgba(30,224,139,0.3);
+      background: rgba(30,224,139,0.12);
+    }
+    .step-token {
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      color: var(--green); letter-spacing: 0.05em; margin-bottom: 6px;
+    }
+    .step-label { font-size: 12px; color: var(--text-muted); line-height: 1.4; max-width: 100px; }
+    .step-arrow {
+      font-size: 20px; color: var(--green-border); flex-shrink: 0;
+      margin: 0 4px; padding-bottom: 32px;
+    }
+    .pipeline-tag {
+      display: inline-block; margin-top: 8px;
+      padding: 2px 8px; border-radius: 4px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      background: rgba(30,224,139,0.1); color: var(--green);
+      text-transform: uppercase;
+    }
+
+    /* ── Why section (3 value props) ────────────────────────────────── */
+    .why-section { padding: 100px 0; position: relative; z-index: 1; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 56px; }
+    .why-card {
+      background: var(--bg-card2);
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      backdrop-filter: blur(8px);
+      transition: all 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .why-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .why-card:hover { border-color: rgba(30,224,139,0.5); transform: translateY(-4px); }
+    .why-card:hover::before { opacity: 1; }
+    .why-icon { font-size: 36px; margin-bottom: 20px; }
+    .why-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .why-card p { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+    .why-card ul { margin-top: 16px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .why-card ul li { font-size: 13px; color: var(--text-muted); display: flex; align-items: flex-start; gap: 8px; }
+    .why-card ul li::before { content: '→'; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+
+    /* ── How it works ───────────────────────────────────────────────── */
+    .how-section { padding: 100px 0; position: relative; z-index: 1; }
+    .how-section-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: start;
+    }
+    .how-left h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; margin-bottom: 20px; }
+    .how-left p { color: var(--text-muted); font-size: 16px; line-height: 1.7; margin-bottom: 32px; }
+    .how-steps { display: flex; flex-direction: column; gap: 0; }
+    .how-step { display: flex; gap: 20px; padding: 24px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .how-step:last-child { border-bottom: none; }
+    .how-step-num {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: var(--green-glow); border: 1px solid var(--green-border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--green);
+    }
+    .how-step-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .how-step-content p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .how-right {
+      background: var(--bg-card);
+      border: 1px solid var(--green-border);
+      border-radius: 16px;
+      padding: 28px;
+      font-family: var(--mono);
+      position: sticky; top: 88px;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .code-label { font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+    .code-body { font-size: 13px; line-height: 1.8; }
+    .code-comment { color: #4B7A5C; }
+    .code-key { color: #7DD3FC; }
+    .code-val { color: var(--green); }
+    .code-str { color: #FCA5A5; }
+    .code-num { color: #FDE68A; }
+    .code-fn { color: #C084FC; }
+    .code-indent { padding-left: 20px; }
+    .code-indent2 { padding-left: 40px; }
+
+    /* ── Community ──────────────────────────────────────────────────── */
+    .community-section { padding: 100px 0; position: relative; z-index: 1; }
+    .community-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 56px; }
+    .community-card {
+      background: var(--bg-card2);
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: all 0.25s;
+    }
+    .community-card:hover { border-color: rgba(30,224,139,0.5); transform: translateY(-3px); }
+    .community-card-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 4px;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .badge-a { background: rgba(30,224,139,0.15); color: var(--green); }
+    .badge-b { background: rgba(124,58,237,0.15); color: #A78BFA; }
+    .badge-c { background: rgba(251,146,60,0.15); color: #FB923C; }
+    .community-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .community-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+    .community-card-meta { font-size: 12px; color: var(--text-dim); }
+
+    /* ── Stats bar ──────────────────────────────────────────────────── */
+    .stats-bar {
+      background: var(--bg-card);
+      border-top: 1px solid var(--green-border);
+      border-bottom: 1px solid var(--green-border);
+      padding: 48px 0;
+      position: relative; z-index: 1;
+    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 32px; text-align: center; }
+    .stat-num { font-size: 36px; font-weight: 800; color: var(--green); letter-spacing: -0.02em; display: block; }
+    .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+    /* ── CTA ────────────────────────────────────────────────────────── */
+    .cta-section {
+      padding: 120px 0;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(30,224,139,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; margin-bottom: 16px; }
+    .cta-section p { color: var(--text-muted); font-size: 18px; max-width: 520px; margin: 0 auto 40px; }
+    .install-box {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--green-border);
+      border-radius: 10px; padding: 16px 24px;
+      font-family: var(--mono); font-size: 13px;
+      margin-bottom: 32px; max-width: 100%; overflow-x: auto;
+      text-align: left;
+    }
+    .install-box-label { color: var(--text-dim); font-size: 11px; white-space: nowrap; }
+    .install-box-code { color: var(--green); white-space: nowrap; }
+    .copy-btn {
+      padding: 6px 12px; border-radius: 4px;
+      background: rgba(30,224,139,0.1); border: 1px solid var(--green-border);
+      color: var(--green); font-size: 11px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+    }
+    .copy-btn:hover { background: rgba(30,224,139,0.2); }
+
+    /* ── Footer ─────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--green-border);
+      padding: 40px 0;
+      position: relative; z-index: 1;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { font-weight: 800; font-size: 16px; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--text-muted); transition: color 0.15s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 12px; color: var(--text-dim); }
+
+    /* ── Animations ─────────────────────────────────────────────────── */
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    /* ── Responsive ─────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .how-section-inner { grid-template-columns: 1fr; }
+      .how-right { position: static; }
+      .nav-links { display: none; }
+      .hero-stats { gap: 28px; }
+      .pipeline-flow { padding: 24px 16px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Nav ──────────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="nav-logo-mark">A4</div>
+        Arkreen for Agents
+      </div>
+      <div class="nav-links">
+        <a href="#pipeline">Pipeline</a>
+        <a href="#how">How it Works</a>
+        <a href="#community">Community</a>
+        <a href="https://github.com/linyao0177/a4a" target="_blank">GitHub</a>
+        <a href="/runner" class="btn-nav">Launch App →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-tag">
+        <span class="tag"><span class="tag-dot"></span>AI Agent × DePIN × ReFi</span>
+      </div>
+      <h1>
+        Turn Your Remote Miner<br />
+        into an <span class="gradient-text">AI Green Agent</span>
+      </h1>
+      <p class="hero-sub">
+        Automate the full green pipeline — from real energy generation to on-chain Bitcoin carbon offset —
+        with a programmable AI Agent that runs on your strategy.
+      </p>
+      <div class="hero-cta">
+        <a href="/runner" class="btn-primary">
+          ⚡ Launch Dashboard
+        </a>
+        <a href="https://github.com/linyao0177/a4a" target="_blank" class="btn-secondary">
+          View on GitHub →
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat-item">
+          <span class="hero-stat-num">180,000+</span>
+          <div class="hero-stat-label">Remote Miners</div>
+        </div>
+        <div class="hero-stat-item">
+          <span class="hero-stat-num">100+ GWh</span>
+          <div class="hero-stat-label">On-chain Carbon Offset</div>
+        </div>
+        <div class="hero-stat-item">
+          <span class="hero-stat-num">160,000+</span>
+          <div class="hero-stat-label">BTC Blocks Greened</div>
+        </div>
+        <div class="hero-stat-item">
+          <span class="hero-stat-num">5,400+ ton</span>
+          <div class="hero-stat-label">CO₂ Impact</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Pipeline ─────────────────────────────────────────────────────── -->
+  <section class="pipeline-section" id="pipeline">
+    <div class="container">
+      <div class="pipeline-header">
+        <div class="section-label">Automated Pipeline</div>
+        <h2>From Generation to <span class="gradient-text">On-Chain Offset</span></h2>
+        <p>
+          Your Agent executes the full 5-step green asset pipeline autonomously —
+          no manual clicks, no cross-platform overhead.
+        </p>
+      </div>
+
+      <div class="pipeline-flow">
+        <div class="pipeline-step">
+          <div class="step-circle">🌱</div>
+          <div class="step-token">MINT</div>
+          <div class="step-label">Mint AREC from generation data</div>
+          <span class="pipeline-tag">On-Chain</span>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-circle">📋</div>
+          <div class="step-token">AREC</div>
+          <div class="step-label">Arkreen Renewable Energy Certificate</div>
+          <span class="pipeline-tag">Certified</span>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-circle">💧</div>
+          <div class="step-token">ART</div>
+          <div class="step-label">Fragment AREC into tradable REC tokens</div>
+          <span class="pipeline-tag">Liquid</span>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-circle">⚡</div>
+          <div class="step-token">KWH</div>
+          <div class="step-label">Convert ART to usable energy units</div>
+          <span class="pipeline-tag">Usable</span>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-circle">🌍</div>
+          <div class="step-token">OFFSET</div>
+          <div class="step-label">GreenBTC.Club — counterbalance BTC history</div>
+          <span class="pipeline-tag">Impact</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why ──────────────────────────────────────────────────────────── -->
+  <section class="why-section" id="why">
+    <div class="container">
+      <div class="section-label">Why It Matters</div>
+      <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 800; max-width: 560px; margin-bottom: 16px;">
+        Three audiences. <span class="gradient-text">One green loop.</span>
+      </h2>
+      <p style="color: var(--text-muted); max-width: 520px;">
+        A4A creates real value for every participant in the Arkreen ecosystem.
+      </p>
+
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">⛏️</div>
+          <h3>For Remote Miners</h3>
+          <p>Your generation data is no longer just data — it's programmable green financial power.</p>
+          <ul>
+            <li>Verifiable green output (AREC)</li>
+            <li>Composable, tradable assets (ART)</li>
+            <li>Redeemable energy units (KWH)</li>
+            <li>Direct on-chain BTC offset impact</li>
+          </ul>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🤖</div>
+          <h3>For Agent Builders</h3>
+          <p>The best innovation playground for AI Agents: real-world inputs, on-chain outcomes, programmable strategies.</p>
+          <ul>
+            <li>Real off-chain inputs (generation data)</li>
+            <li>Verifiable on-chain actions (mint/swap/offset)</li>
+            <li>Configurable strategy rules & risk controls</li>
+            <li>Clear, measurable outcomes</li>
+          </ul>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🌐</div>
+          <h3>For the Community</h3>
+          <p>Arkreen × GreenBTC.Club — the first DePIN & ReFi community truly open to AI Agents.</p>
+          <ul>
+            <li>Ops-driven → Protocol & strategy driven</li>
+            <li>Manual tasks → Automated workflows</li>
+            <li>Single product → Agent-native ecosystem</li>
+            <li>Share, fork & remix green strategies</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How it works ─────────────────────────────────────────────────── -->
+  <section class="how-section" id="how">
+    <div class="container">
+      <div class="how-section-inner">
+        <div class="how-left">
+          <div class="section-label">How It Works</div>
+          <h2>Write strategy.<br /><span class="gradient-text">Let Agent execute.</span></h2>
+          <p>You define the rules. The Agent handles the on-chain complexity — continuously, autonomously, verifiably.</p>
+
+          <div class="how-steps">
+            <div class="how-step">
+              <div class="how-step-num">01</div>
+              <div class="how-step-content">
+                <h4>Install the AREC Green Bot Skill</h4>
+                <p>One command loads the SKILL.md into your Claude Code / OpenClaw environment.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <div class="how-step-num">02</div>
+              <div class="how-step-content">
+                <h4>Define your green strategy</h4>
+                <p>Set thresholds, frequencies, domain targets, and risk controls — in plain language.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <div class="how-step-num">03</div>
+              <div class="how-step-content">
+                <h4>Agent auto-executes the pipeline</h4>
+                <p>AREC minting → ART fragmentation → KWH conversion → GreenBTC offset. Fully automated.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <div class="how-step-num">04</div>
+              <div class="how-step-content">
+                <h4>Track results on the dashboard</h4>
+                <p>Real-time pipeline state, offset records, balance history — all in one place.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <div class="how-step-num">05</div>
+              <div class="how-step-content">
+                <h4>Share your strategy, earn reputation</h4>
+                <p>Leaderboard, contribution badges, and strategy marketplace — green impact is visible.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="how-right">
+          <div class="code-header">
+            <div class="code-dots">
+              <div class="code-dot" style="background:#FF5F57"></div>
+              <div class="code-dot" style="background:#FFBD2E"></div>
+              <div class="code-dot" style="background:#28C840"></div>
+            </div>
+            <div class="code-label">strategy.ts</div>
+          </div>
+          <div class="code-body">
+            <div><span class="code-comment">// Your green strategy config</span></div>
+            <div><span class="code-key">const</span> <span class="code-val">strategy</span> = {</div>
+            <div class="code-indent"><span class="code-comment">// Auto-mint when ≥ 100 kWh</span></div>
+            <div class="code-indent"><span class="code-key">minKwhThreshold</span>: <span class="code-num">100</span>,</div>
+            <div class="code-indent"><span class="code-comment">// DCA: execute daily</span></div>
+            <div class="code-indent"><span class="code-key">strategy</span>: <span class="code-str">"dca"</span>,</div>
+            <div class="code-indent"><span class="code-comment">// Keep 50 AKRE in reserve</span></div>
+            <div class="code-indent"><span class="code-key">minAkreReserve</span>: <span class="code-num">50n</span>,</div>
+            <div class="code-indent"><span class="code-comment">// GreenBTC domains to offset</span></div>
+            <div class="code-indent"><span class="code-key">domainIds</span>: [<span class="code-num">2</span>, <span class="code-num">3</span>, <span class="code-num">11</span>],</div>
+            <div>};</div>
+            <br />
+            <div><span class="code-comment">// Agent takes it from here ↓</span></div>
+            <div><span class="code-key">const</span> <span class="code-val">runner</span> = <span class="code-key">new</span> <span class="code-fn">A4ARunner</span>(</div>
+            <div class="code-indent"><span class="code-val">AGENT_PK</span>, <span class="code-val">POLYGON_RPC</span>, strategy</div>
+            <div>);</div>
+            <br />
+            <div><span class="code-comment">// ✓ CREATED</span></div>
+            <div><span class="code-comment">// ✓ MINT_REQUESTED → tokenId=4821</span></div>
+            <div><span class="code-comment">// ✓ CERTIFIED</span></div>
+            <div><span class="code-comment">// ✓ LIQUIDIZED → 2.4 ART</span></div>
+            <div><span class="code-comment">// ✓ KWH_CONVERTED → 330 kWh</span></div>
+            <div style="color: var(--green)">// ✓ COMPLETED — 330 kWh offset 🌍</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats ─────────────────────────────────────────────────────────── -->
+  <section class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div>
+          <span class="stat-num">7,600+</span>
+          <div class="stat-label">MWh Generated</div>
+        </div>
+        <div>
+          <span class="stat-num">160k+</span>
+          <div class="stat-label">BTC Blocks Greened</div>
+        </div>
+        <div>
+          <span class="stat-num">60,000+</span>
+          <div class="stat-label">Community Addresses</div>
+        </div>
+        <div>
+          <span class="stat-num">5,400t</span>
+          <div class="stat-label">CO₂ Offset</div>
+        </div>
+        <div>
+          <span class="stat-num">Polygon</span>
+          <div class="stat-label">Mainnet — Live</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Community ────────────────────────────────────────────────────── -->
+  <section class="community-section" id="community">
+    <div class="container">
+      <div class="section-label">Community Activities</div>
+      <h2 style="font-size: clamp(28px, 4vw, 48px); font-weight: 800; margin-bottom: 16px;">
+        Green impact is <span class="gradient-text">a team sport</span>
+      </h2>
+      <p style="color: var(--text-muted); max-width: 540px;">
+        Three ways to participate, compete, and co-create the green future.
+      </p>
+
+      <div class="community-grid">
+        <div class="community-card">
+          <div class="community-card-badge badge-a">Event A</div>
+          <h3>Green Agent Hack Week</h3>
+          <p>Submit your Agent strategy — the most automated, efficient, and composable green pipeline wins. Strategy is the artwork.</p>
+          <div class="community-card-meta">Prize pool: AREC / ART / KWH + GreenBTC.Club contribution badges</div>
+        </div>
+        <div class="community-card">
+          <div class="community-card-badge badge-b">Event B</div>
+          <h3>Strategy Marketplace</h3>
+          <p>The best strategies get forked and reused by the community. Fork count = reputation. Build green strategy reputation that compounds.</p>
+          <div class="community-card-meta">Strategy sharing · Fork analytics · Optional revenue share</div>
+        </div>
+        <div class="community-card">
+          <div class="community-card-badge badge-c">Event C</div>
+          <h3>BTC Offset Challenge</h3>
+          <p>Monthly collective goal: offset X kWh of Bitcoin's historical electricity usage together. Agents auto-contribute. Results on-chain and shareable.</p>
+          <div class="community-card-meta">Leaderboard · Verifiable on-chain · Shareable records</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ──────────────────────────────────────────────────────────── -->
+  <section class="cta-section" id="install">
+    <div class="container">
+      <div class="section-label">Get Started</div>
+      <h2>One command to become<br /><span class="gradient-text">a Green Agent</span></h2>
+      <p>Add the AREC Green Bot Skill to Claude Code and start automating your green pipeline today.</p>
+
+      <div>
+        <div class="install-box">
+          <span class="install-box-label">$</span>
+          <span class="install-box-code">mkdir -p ~/.claude/skills/arec-green-bot && curl -sL https://raw.githubusercontent.com/linyao0177/arec-green-bot/main/SKILL.md -o ~/.claude/skills/arec-green-bot/SKILL.md</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText('mkdir -p ~/.claude/skills/arec-green-bot && curl -sL https://raw.githubusercontent.com/linyao0177/arec-green-bot/main/SKILL.md -o ~/.claude/skills/arec-green-bot/SKILL.md'); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
+        </div>
+      </div>
+
+      <div style="display:flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="/runner" class="btn-primary">⚡ Open Dashboard</a>
+        <a href="https://github.com/linyao0177/a4a" target="_blank" class="btn-secondary">View on GitHub →</a>
+      </div>
+
+      <p style="margin-top: 24px; font-size: 13px; color: var(--text-dim);">
+        Runs on Polygon mainnet · Open source · No KYC
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Footer ───────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">Arkreen for Agents</div>
+        <div class="footer-links">
+          <a href="https://www.arkreen.com" target="_blank">Arkreen</a>
+          <a href="https://greenbtc.club" target="_blank">GreenBTC.Club</a>
+          <a href="https://github.com/linyao0177/a4a" target="_blank">GitHub</a>
+          <a href="https://github.com/linyao0177/arec-green-bot" target="_blank">SKILL.md</a>
+        </div>
+        <div class="footer-copy">© 2026 Arkreen for Agents · Built on Polygon</div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
