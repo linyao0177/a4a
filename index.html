@@ -387,8 +387,7 @@
   <nav>
     <div class="nav-inner">
       <div class="nav-logo">
-        <div class="nav-logo-mark">A4</div>
-        Arkreen for Agents
+        <img src="https://www.arkreen.com/icon/arkreen-01.svg" alt="Arkreen" style="height:28px;filter:brightness(0) invert(1);" />
       </div>
       <div class="nav-links">
         <a href="#pipeline">Pipeline</a>
@@ -425,11 +424,11 @@
 
       <div class="hero-stats">
         <div class="hero-stat-item">
-          <span class="hero-stat-num">180,000+</span>
+          <span class="hero-stat-num">300,000+</span>
           <div class="hero-stat-label">Remote Miners</div>
         </div>
         <div class="hero-stat-item">
-          <span class="hero-stat-num">100+ GWh</span>
+          <span class="hero-stat-num">140+ GWh</span>
           <div class="hero-stat-label">On-chain Carbon Offset</div>
         </div>
         <div class="hero-stat-item">
@@ -697,20 +696,52 @@
   <section class="cta-section" id="install">
     <div class="container">
       <div class="section-label">Get Started</div>
-      <h2>One command to become<br /><span class="gradient-text">a Green Agent</span></h2>
-      <p>Add the AREC Green Bot Skill to Claude Code and start automating your green pipeline today.</p>
+      <h2>Build your own<br /><span class="gradient-text">AI Green Agent</span></h2>
+      <p>Use the AREC Green Bot Skill with any AI agent framework to automate your green pipeline.</p>
 
-      <div>
-        <div class="install-box">
-          <span class="install-box-label">$</span>
-          <span class="install-box-code">mkdir -p ~/.claude/skills/arec-green-bot && curl -sL https://raw.githubusercontent.com/linyao0177/arec-green-bot/main/SKILL.md -o ~/.claude/skills/arec-green-bot/SKILL.md</span>
-          <button class="copy-btn" onclick="navigator.clipboard.writeText('mkdir -p ~/.claude/skills/arec-green-bot && curl -sL https://raw.githubusercontent.com/linyao0177/arec-green-bot/main/SKILL.md -o ~/.claude/skills/arec-green-bot/SKILL.md'); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
+      <!-- Skill cards -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; max-width: 860px; margin: 40px auto;">
+
+        <div class="why-card" style="text-align:left;">
+          <div style="font-size:28px; margin-bottom:12px;">📖</div>
+          <h3 style="font-size:16px; margin-bottom:8px;">AREC Green Bot Skill</h3>
+          <p style="font-size:13px; margin-bottom:16px;">The SKILL.md is a capability spec that lets any AI model understand and execute Arkreen's green pipeline — strategy-driven, fully configurable.</p>
+          <a href="https://github.com/linyao0177/arec-green-bot/blob/main/SKILL.md"
+             target="_blank"
+             style="display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:6px; background:var(--green); color:var(--bg); font-size:13px; font-weight:700; transition:all 0.15s;"
+             onmouseover="this.style.background='#3FFFA0'" onmouseout="this.style.background='var(--green)'">
+            View SKILL.md →
+          </a>
         </div>
+
+        <div class="why-card" style="text-align:left;">
+          <div style="font-size:28px; margin-bottom:12px;">🤖</div>
+          <h3 style="font-size:16px; margin-bottom:8px;">Claude Code</h3>
+          <p style="font-size:13px; margin-bottom:16px;">One-command install for Claude Code / OpenClaw users. The skill is auto-loaded on every session.</p>
+          <div class="install-box" style="margin-bottom:0; padding: 10px 14px; font-size:11px;">
+            <span class="install-box-label">$</span>
+            <span class="install-box-code" style="font-size:11px;">mkdir -p ~/.claude/skills/arec-green-bot && curl -sL https://raw.githubusercontent.com/linyao0177/arec-green-bot/main/SKILL.md -o ~/.claude/skills/arec-green-bot/SKILL.md</span>
+            <button class="copy-btn" onclick="navigator.clipboard.writeText('mkdir -p ~/.claude/skills/arec-green-bot && curl -sL https://raw.githubusercontent.com/linyao0177/arec-green-bot/main/SKILL.md -o ~/.claude/skills/arec-green-bot/SKILL.md'); this.textContent='✓'; setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
+          </div>
+        </div>
+
+        <div class="why-card" style="text-align:left;">
+          <div style="font-size:28px; margin-bottom:12px;">⚙️</div>
+          <h3 style="font-size:16px; margin-bottom:8px;">Any Agent Framework</h3>
+          <p style="font-size:13px; margin-bottom:16px;">Use the A4A SDK directly with LangChain, AutoGen, CrewAI, or any custom agent. The TypeScript SDK wraps the full pipeline.</p>
+          <a href="https://github.com/linyao0177/a4a"
+             target="_blank"
+             style="display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:6px; border:1px solid var(--green-border); color:var(--green); font-size:13px; font-weight:700; transition:all 0.15s; background:transparent;"
+             onmouseover="this.style.background='var(--green-glow)'" onmouseout="this.style.background='transparent'">
+            View A4A SDK →
+          </a>
+        </div>
+
       </div>
 
-      <div style="display:flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-        <a href="/runner" class="btn-primary">⚡ Open Dashboard</a>
-        <a href="https://github.com/linyao0177/a4a" target="_blank" class="btn-secondary">View on GitHub →</a>
+      <div style="display:flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 16px;">
+        <a href="https://linyao0177.github.io/a4a/" class="btn-primary">⚡ Open Dashboard</a>
+        <a href="https://github.com/linyao0177/a4a" target="_blank" class="btn-secondary">GitHub →</a>
       </div>
 
       <p style="margin-top: 24px; font-size: 13px; color: var(--text-dim);">
